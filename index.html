@@ -26,9 +26,9 @@ h1 { font-family: "Playfair Display"; font-size: 30px; padding: 10px 0px; margin
 .field .tile .health { background-color: #ff0000; z-index: 11; position: absolute; left: 0px; top: 0px; height: 3px; }
 .field .tileP .health { background-color: #00ff00; z-index: 11; position: absolute; left: 0px; top: 0px; height: 3px; }
 .game-info {display: flex; gap: 20px; align-items: center; font-size: 20px; font-weight: 600; line-height: 20px;}
-.game-info p {position: relative; width: 55px;}
+.game-info p {position: relative; width: 55px; margin-top: 10px;}
 .game-info span {position: absolute; top: -2px;padding-left: 2px;}
-.low-health {border: 2px solid #ff0000; box-shadow: rgb(255 0 0 / 20%) 0px 0px 10px 8px;}
+.low-health {border: 2px solid #ff0000; box-shadow: rgb(255 0 0 / 50%) 0px 0px 10px 8px;}
 .low-health-text {color: #ff0000;}
 </style>
 	</head>
@@ -39,9 +39,10 @@ h1 { font-family: "Playfair Display"; font-size: 30px; padding: 10px 0px; margin
 			<p>❤️<span class="level-life"></span></p>
 			<p>👹<span class="number-enemies"></span></p>
 			<p>🧪<span class="number-potion"></span></p>
-			<p>👣<span class="number-steps"></span></p>
 			<p>🗡️<span class="number-inventory"></span></p>
-		</div>		
+			<p>👣<span class="number-steps"></span></p>
+			<p>⚔️<span class="number-attacks"></span></p>
+		</div>
 		<script src="index.js" defer></script>
 	</body>
 </html>

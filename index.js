@@ -1,5 +1,5 @@
-// Сила удара противника разная в диапозоне 20-30
-// Зелье восстанавливает здоровь в диапозоне 20-30
+// Каждый второй удар отнимает у игрока здовроье в дипазоне 10-15, при сближении отемается 7 
+// Зелье восстанавливает здоровьe в диапозоне 20-30
 
 class Game {
     constructor() {
@@ -10,6 +10,7 @@ class Game {
         this.numberInventoryInfo = document.querySelector(".number-inventory");
         this.numberStepsInfo = document.querySelector(".number-steps");
         this.numberPotionInfo = document.querySelector(".number-potion");
+        this.numberAttacksInfo = document.querySelector(".number-attacks");
         this.width = 40;
         this.height = 24;
         this.map = [];
@@ -21,11 +22,30 @@ class Game {
         this.numberInventory = 0
         this.gameOver = false;
         this.corridors = [];
+        this.numberAttacks = 0;
+        this.numberHit = 0;
+        this.isEnemieNear = false;
+        this.playerСoordinates = {
+            x:null,
+            y:null
+        }
+        this.potionPower = {
+            min: 20,
+            max: 30
+        }
         this.playerParameters = {
             health: 100,
+            minHealth: 0,
             maxHealth:100,
-            attackPower: 20,
+            lowHealth: 40,
+            attackPower: 17,
         };
+        this.enemieParametrs = {
+            health: 100,
+            attackPowerMin: 10,
+            attackPowerMax: 15,
+            attackPowerApproach: 7,
+        }
     }
 
     init() {
@@ -37,14 +57,17 @@ class Game {
         this.placeEnemies();
         this.renderMap();
         this.setupControls();
+        this.checkEnemyAttacks();
         this.levelLifeInfo.textContent = this.playerParameters.health;
         this.numberEnemiesInfo.textContent = this.numberEnemies;
         this.numberInventoryInfo.textContent = this.numberInventory;
         this.numberStepsInfo.textContent = this.numberSteps;
         this.numberPotionInfo.textContent = this.numberPotio;
+        this.numberAttacksInfo.textContent = this.numberAttacks;
     }
 
-    creatRandomNum (min, max){
+    creatRandomNumRange (min, max){
+        if (min > max) throw new Error("Минимальное значение больше максимального");
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
@@ -52,16 +75,11 @@ class Game {
         let healthBar = document.querySelector(".tileP .health");
         healthBar.style.width = this.playerParameters.health;
 
-        if (this.playerParameters.health >= 100){
-            this.playerParameters.health = 100; 
-        }
-
-        if (this.playerParameters.health < 0){
-            this.playerParameters.health = 0; 
-        }
+        if (this.playerParameters.health >= this.playerParameters.maxHealth) this.playerParameters.health = 100; 
+        if (this.playerParameters.health < this.playerParameters.minHealth) this.playerParameters.health = 0;
 
         // предупреждение о том, что мало здоровья
-        if (this.playerParameters.health < 40) {
+        if (this.playerParameters.health < this.playerParameters.lowHealth) {
             this.fieldBox.classList.add('low-health');
             this.levelLifeInfo.classList.add('low-health-text');
         } else {
@@ -84,13 +102,28 @@ class Game {
         this.numberPotionInfo.textContent = this.numberPotio;
     }
 
+    changedNumberAttacks(){
+        this.numberAttacksInfo.textContent = this.numberAttacks;
+    }
+
     showDelayedConfirm(message) {
         setTimeout(() => {
             const restart = confirm(message);
             if (restart) {
                 window.location.reload();
             }
-        }, 300);
+        }, 200);
+    }
+
+    getUniqueRandomNumbers(count, max) {
+        if (count > max + 1) throw new Error("Уникальных чисел ожидается больше чем max число");
+
+        const numbers = new Set();
+        while (numbers.size < count) {
+            numbers.add(Math.floor(Math.random() * (max + 1)));
+        }
+    
+        return Array.from(numbers);
     }
 
     //1. Базовый каркас карты, заполняет все ячейки tileW
@@ -100,10 +133,12 @@ class Game {
 
     //2. Генерируем где будут коридоры
     generateCorridors() { 
-        const corridorCount = this.creatRandomNum(3, 5)
-        
+        const corridorCount = this.creatRandomNumRange(3, 5)
+        const axisNumbersX = this.getUniqueRandomNumbers(corridorCount, this.width - 1)
+        const axisNumbersY = this.getUniqueRandomNumbers(corridorCount, this.height - 1)
+
         for (let i = 0; i < corridorCount; i++) {
-            let x = Math.floor(Math.random() * this.width);
+            let x = axisNumbersX[i];
             for (let y = 0; y < this.height; y++) {
                 if(( y <= 15 && x <= 31)){
                     this.corridors.push(`${y}-${x}`)
@@ -113,7 +148,7 @@ class Game {
         }
 
         for (let i = 0; i < corridorCount; i++) {
-            let y = Math.floor(Math.random() * this.height);
+            let y = axisNumbersY[i];
             for (let x = 0; x < this.width; x++) {
                 if(y <= 15 && x <= 31){
                     this.corridors.push(`${y}-${x}`)
@@ -125,20 +160,18 @@ class Game {
     
     //3. Генерируем где будут комнаты 
     generateRooms() {
-        const roomCount = this.creatRandomNum(5, 10)
+        const roomCount = this.creatRandomNumRange(5, 10)
     
         for (let i = 0; i < roomCount; i++) {
             const randomIndex = Math.floor(Math.random() * this.corridors.length);
-            const [firstTileY, firstTileX] = this.corridors[randomIndex].split('-').map(Number); // Разбираем координаты
+            const [firstTileY, firstTileX] = this.corridors[randomIndex].split('-').map(Number);
     
-            let roomWidth = this.creatRandomNum(3, 8);
-            let roomHeight = this.creatRandomNum(3, 8);
+            let roomWidth = this.creatRandomNumRange(3, 8);
+            let roomHeight = this.creatRandomNumRange(3, 8);
     
             // Проверяем, помещается ли комната в пределах карты
-            if (firstTileX + roomWidth >= this.width || firstTileY + roomHeight >= this.height) {
-                continue;
-            }
-    
+            if (firstTileX + roomWidth >= this.width || firstTileY + roomHeight >= this.height) continue;
+
             // Строим комнату начиная с указанной первой плитки
             for (let y = firstTileY; y < firstTileY + roomHeight; y++) {
                 for (let x = firstTileX; x < firstTileX + roomWidth; x++) {
@@ -158,7 +191,7 @@ class Game {
     }
 
     placeEnemies() {
-        this.enemies = this.placeObject("tileE", this.numberEnemies).map(enemy => ({ ...enemy, health: 100 }));
+        this.enemies = this.placeObject("tileE", this.numberEnemies).map(enemy => ({ ...enemy, health: this.enemieParametrs.health }));
     }
 
     //4. Генерируем где будут объекты (зелье, мечи) 
@@ -182,10 +215,15 @@ class Game {
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
                 const tile = document.createElement("div");
-                tile.classList.add("tile", this.map[y][x]);
                 tile.style.left = `${x * 25}px`;
                 tile.style.top = `${y * 25}px`;
                 this.field.appendChild(tile);
+                tile.classList.add("tile", this.map[y][x]);
+
+                // Удаление игрока с поля
+                if (x === this.playerСoordinates.x && y === this.playerСoordinates.y && this.playerParameters.health <= 0) {
+                    tile.className = "tile tile-";
+                }
 
                 // Добавляем блок здоровья для игрока
                 if (this.map[y][x] === "tileP"){
@@ -203,7 +241,7 @@ class Game {
                         healthBar.style.width = `${this.enemies[i].health}%`;
                         tile.appendChild(healthBar);
                     }
-                }
+                }         
             } 
         }
     }
@@ -211,17 +249,29 @@ class Game {
     setupControls() {
         document.addEventListener("keydown", (e) => {
             let dx = 0, dy = 0;
-            if (e.code === "KeyW") dy = -1;
-            if (e.code === "KeyS") dy = 1;
-            if (e.code === "KeyA") dx = -1;
-            if (e.code === "KeyD") dx = 1;
-            if (e.code === "Space") {
-                e.preventDefault();
-                this.attack();
+
+            switch (e.code) {
+                case 'KeyW': // Вверх
+                    dy = -1
+                    break;
+                case 'KeyS': // Влево
+                    dy = 1;;
+                    break;
+                case 'KeyA': // Вниз
+                    dx = -1;
+                    break;
+                case 'KeyD': // Вправо
+                    dx = 1;
+                    break;
+                case 'Space': // Атака
+                    e.preventDefault();
+                    this.isEnemieNear && this.attack();
+                    return;
+                default:
+                    return;
             }
-            if (dx || dy) {
-                this.movePlayer(dx, dy);
-            }
+
+            if (dx || dy) this.movePlayer(dx, dy);
         });
     }
 
@@ -232,43 +282,48 @@ class Game {
         newX = Math.max(0, Math.min(newX, this.width - 1));
         newY = Math.max(0, Math.min(newY, this.height - 1));
 
-        if (this.map[newY][newX] === "tile-") {
+        this.playerСoordinates.x = newX
+        this.playerСoordinates.y = newY
+
+        const updatePlayerPosition  = (newX, newY) => {
             this.map[this.player.y][this.player.x] = "tile-";
             this.player.x = newX;
             this.player.y = newY;
             this.map[newY][newX] = "tileP";
-            this.numberSteps++
+        };
+
+        // когда переходим на пустой квадрат
+        if (this.map[newY][newX] === "tile-") {
+            updatePlayerPosition(newX, newY)
+            this.numberSteps++;
             this.changedNumberSteps()
             this.moveEnemies()
             this.renderMap();
-            this. checkEnemyAttacks();
+            this.checkEnemyAttacks();
         }
 
         // когда берем зелье
         if(this.map[newY][newX] === "tileHP"){
-            this.map[this.player.y][this.player.x] = "tile-";
-            this.player.x = newX;
-            this.player.y = newY;
-            this.map[newY][newX] = "tileP";
-            this.playerParameters.health = this.playerParameters.health + this.creatRandomNum(20, 30);
+            updatePlayerPosition(newX, newY)
+            this.playerParameters.health = this.playerParameters.health + this.creatRandomNumRange(this.potionPower.min, this.potionPower.max);
             this.numberPotio --;
             this.changedNumberPotio();
             this.changedPlayerHealth();
             this.renderMap();
-            this. checkEnemyAttacks();
+            this.checkEnemyAttacks();
         }
 
         // когда берем меч
         if (this.map[newY][newX] === "tileSW"){
-            this.map[this.player.y][this.player.x] = "tile-";
-            this.player.x = newX;
-            this.player.y = newY;
-            this.map[newY][newX] = "tileP";
-            this.playerParameters.attackPower += 20;
+            updatePlayerPosition(newX, newY)
             this.numberInventory ++;
+
+            if(this.numberInventory === 1) this.playerParameters.attackPower = 25;
+            if(this.numberInventory === 2) this.playerParameters.attackPower = 50;
+
             this.changedNumberInventory();
             this.renderMap();
-            this. checkEnemyAttacks();
+            this.checkEnemyAttacks();
         }
     }
     
@@ -278,16 +333,14 @@ class Game {
             let newX, newY;
             let moved = false;
     
-            // eсли игрок в радиусе 6 клеток, враг преследует его
-            if (distanceToPlayer <= 6) { 
+            // eсли игрок в радиусе 5 клеток, враг преследует его
+            if (distanceToPlayer <= 5) { 
                 let dx = Math.sign(this.player.x - enemy.x);
                 let dy = Math.sign(this.player.y - enemy.y);
                 newX = enemy.x + dx;
                 newY = enemy.y + dy;
                 
-                if (this.map[newY][newX] === "tile-") {
-                    moved = true;
-                }
+                if (this.map[newY][newX] === "tile-") moved = true;
             }
     
             if (!moved) { 
@@ -328,7 +381,8 @@ class Game {
             const dy = Math.abs(enemy.y - this.player.y);
             
             if (dx <= 1 && dy <= 1) {
-                this.playerParameters.health -= this.creatRandomNum(20, 30);
+                this.numberSteps > 0 && (this.playerParameters.health -= this.enemieParametrs.attackPowerApproach); 
+                this.isEnemieNear = true;
                 this.changedPlayerHealth();
                 this.renderMap();
                 this.checkGameOver();
@@ -337,6 +391,19 @@ class Game {
     }
 
     attack() { 
+        // каждый второй удар по противнику отнимает здоровье у игрока
+        if (this.isEnemieNear){
+            this.numberHit++;
+            this.numberAttacks++;
+
+            if (this.numberHit === 2) {
+                this.playerParameters.health -= this.creatRandomNumRange(this.enemieParametrs.attackPowerMin, this.enemieParametrs.attackPowerMax); 
+                this.numberHit = 0;
+            }
+
+            this.changedNumberAttacks();
+        }
+        
         this.enemies = this.enemies.filter(enemy => {
             if (Math.abs(enemy.x - this.player.x) <= 1 && Math.abs(enemy.y - this.player.y) <= 1) {
                 enemy.health -= this.playerParameters.attackPower;
@@ -346,13 +413,16 @@ class Game {
                     this.map[enemy.y][enemy.x] = "tile-";
                     this.numberEnemies--;
                     this.numberEnemiesInfo.innerHTML = this.numberEnemies;
+                    this.numberHit = 0;
+                    this.isEnemieNear = false;
                     this.checkGameOver();
                     return false
                 }
                 this.checkGameOver();
-            }
+            } 
             return true;
         });
+
         this.renderMap();
     }
 
