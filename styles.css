@@ -1,0 +1,158 @@
+* {
+    box-sizing: border-box;
+
+}
+body, html {
+    height: 100%;
+}
+
+body {
+    background-color: #000000;
+    color: #ffffff;
+    font-family: "Playfair Display";
+}
+
+.main{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.field-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-title {
+    font-size: 30px;
+    padding: 10px 0px;
+    margin: 0px;
+}
+
+.rules-game-btn {
+    height: 20px;
+    padding: 0px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative; 
+    width: 1208px;
+    height: 728px;
+    margin: 0 auto;
+    border: 4px solid;
+}
+
+.field .tile {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-size: 100%;
+    background-image: url(images/tile-.png);
+    z-index: 5;
+}
+
+.field .tileW {
+    background-image: url(images/tile-W.png);
+}
+
+.field .tileE {
+    background-image: url(images/tile-E.png);
+    z-index: 10;
+}
+
+.field .tileP {
+    background-image: url(images/tile-P.png);
+    z-index: 10;
+}
+
+.field .tileHP {
+    background-image: url(images/tile-HP.png);
+    z-index: 9;
+}
+
+.field .tileSW {
+    background-image: url(images/tile-SW.png);
+    z-index: 9;
+}
+
+.field .tile .health {
+    background-color: #ff0000;
+    z-index: 11;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    height: 4px;
+    border-radius: 10px;
+}
+
+.field .tileP .health {
+    background-color: #00ff00;
+    z-index: 11;
+    position: absolute;
+    left:
+    0px;
+    top: 0px;
+    height: 4px;
+    border-radius: 10px;
+}
+
+.game-info {
+    display: flex;
+    gap: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 20px;
+}
+
+.game-info p {
+    position: relative;
+    width: 55px;
+    margin-top: 10px;
+}
+
+.game-info span {
+    position: absolute;
+    top: -2px;
+    padding-left: 2px;
+}
+
+.game-info img {
+    width: 22px;
+    height: 22px;
+}
+
+.low-health {
+    border: 4px solid #ff0000;
+    box-shadow: rgb(255 0 0 / 50%) 0px 0px 10px 8px;
+}
+
+.low-health-text {
+    color: #ff0000;
+}
+
+@media (max-width: 1600px) {
+    .field {
+        width: 1008px;
+        height: 608px;
+    }
+
+    .field .tile .health {
+        height: 3px;
+    }
+}
+
+@media (max-width: 1368px) {
+    .field {
+        width: 808px;
+        height: 488px;
+    }
+
+    .field .tile .health {
+        height: 2px;
+    }
+}

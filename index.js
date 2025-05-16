@@ -11,6 +11,7 @@ class Game {
         this.numberStepsInfo = document.querySelector(".number-steps");
         this.numberPotionInfo = document.querySelector(".number-potion");
         this.numberAttacksInfo = document.querySelector(".number-attacks");
+        this.rulesGameBtn = document.querySelector(".rules-game-btn");
         this.width = 40;
         this.height = 24;
         this.map = [];
@@ -46,9 +47,19 @@ class Game {
             attackPowerMax: 15,
             attackPowerApproach: 7,
         }
+
+        window.addEventListener("resize", () => {
+            this.updateTileSize();
+            this.renderMap();
+        });
+
+        this.rulesGameBtn.addEventListener("click", () => {
+            this.clickBtnRulesGame();
+        });
     }
 
     init() {
+        this.updateTileSize();
         this.generateMap();
         this.generateCorridors();
         this.generateRooms();
@@ -58,6 +69,7 @@ class Game {
         this.renderMap();
         this.setupControls();
         this.checkEnemyAttacks();
+        this.clickBtnRulesGame();
         this.levelLifeInfo.textContent = this.playerParameters.health;
         this.numberEnemiesInfo.textContent = this.numberEnemies;
         this.numberInventoryInfo.textContent = this.numberInventory;
@@ -80,10 +92,10 @@ class Game {
 
         // предупреждение о том, что мало здоровья
         if (this.playerParameters.health < this.playerParameters.lowHealth) {
-            this.fieldBox.classList.add('low-health');
+            this.field.classList.add('low-health');
             this.levelLifeInfo.classList.add('low-health-text');
         } else {
-            this.fieldBox.classList.remove('low-health');
+            this.field.classList.remove('low-health');
             this.levelLifeInfo.classList.remove('low-health-text');
         }
        
@@ -124,6 +136,20 @@ class Game {
         }
     
         return Array.from(numbers);
+    }
+
+    updateTileSize() {
+        if (window.innerWidth <= 1368) {
+            this.tileSize = 20;
+        } else if (window.innerWidth <= 1600) {
+            this.tileSize = 25;
+        } else {
+            this.tileSize = 30;
+        }
+    }
+
+    clickBtnRulesGame() {
+        console.log('click')
     }
 
     //1. Базовый каркас карты, заполняет все ячейки tileW
@@ -215,8 +241,10 @@ class Game {
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
                 const tile = document.createElement("div");
-                tile.style.left = `${x * 25}px`;
-                tile.style.top = `${y * 25}px`;
+                tile.style.left = `${x * this.tileSize}px`;
+                tile.style.top = `${y * this.tileSize}px`;
+                tile.style.width = `${this.tileSize}px`;
+                tile.style.height = `${this.tileSize}px`;
                 this.field.appendChild(tile);
                 tile.classList.add("tile", this.map[y][x]);
 
