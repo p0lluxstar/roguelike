@@ -1,6 +1,5 @@
 import { rulesGame } from './rulesGame.js';
 import { gameOver } from './gameOver.js';
-import { newGame } from './newGame.js';
 
 export class Game {
     constructor() {
@@ -12,6 +11,7 @@ export class Game {
         this.numberStepsInfo = document.querySelector(".number-steps");
         this.numberPotionInfo = document.querySelector(".number-potion");
         this.numberAttacksInfo = document.querySelector(".number-attacks");
+        this.handleKeyDown = this.handleKeyDown.bind(this);
         this.width = 40;
         this.height = 24;
         this.map = [];
@@ -49,12 +49,18 @@ export class Game {
         }
 
         window.addEventListener("resize", () => {
+            const previousTileSize = this.tileSize;
+
             this.updateTileSize();
-            this.renderMap();
+
+            if (this.tileSize !== previousTileSize) {
+                this.renderMap();
+            }
         });
     }
 
     init() {
+        this.removeControls();
         this.updateTileSize();
         this.generateMap();
         this.generateCorridors();
@@ -65,6 +71,7 @@ export class Game {
         this.renderMap();
         this.setupControls();
         this.checkEnemyAttacks();
+        this.changedPlayerHealth();
         this.levelLifeInfo.textContent = this.playerParameters.health;
         this.numberEnemiesInfo.textContent = this.numberEnemies;
         this.numberInventoryInfo.textContent = this.numberInventory;
@@ -72,7 +79,6 @@ export class Game {
         this.numberPotionInfo.textContent = this.numberPotio;
         this.numberAttacksInfo.textContent = this.numberAttacks;
         rulesGame(this);
-        newGame()
     }
 
     createRandomNumberInRange (min, max){
@@ -267,33 +273,39 @@ export class Game {
         }
     }
 
+    handleKeyDown (e) {
+        let dx = 0, dy = 0;
+
+        switch (e.code) {
+            case 'KeyW': // Вверх
+                dy = -1
+                break;
+            case 'KeyS': // Влево
+                dy = 1;;
+                break;
+            case 'KeyA': // Вниз
+                dx = -1;
+                break;
+            case 'KeyD': // Вправо
+                dx = 1;
+                break;
+            case 'Space': // Атака
+                e.preventDefault();
+                this.isEnemieNear && this.attack();
+                return;
+            default:
+                return;
+        }
+
+        if (dx || dy) this.movePlayer(dx, dy);
+    };
+
     setupControls() {
-        document.addEventListener("keydown", (e) => {
-            let dx = 0, dy = 0;
+        document.addEventListener("keydown", this.handleKeyDown);
+    }
 
-            switch (e.code) {
-                case 'KeyW': // Вверх
-                    dy = -1
-                    break;
-                case 'KeyS': // Влево
-                    dy = 1;;
-                    break;
-                case 'KeyA': // Вниз
-                    dx = -1;
-                    break;
-                case 'KeyD': // Вправо
-                    dx = 1;
-                    break;
-                case 'Space': // Атака
-                    e.preventDefault();
-                    this.isEnemieNear && this.attack();
-                    return;
-                default:
-                    return;
-            }
-
-            if (dx || dy) this.movePlayer(dx, dy);
-        });
+    removeControls() {
+        document.removeEventListener("keydown", this.handleKeyDown);
     }
 
     movePlayer(dx, dy) {

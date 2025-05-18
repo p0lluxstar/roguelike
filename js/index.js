@@ -1,4 +1,8 @@
 import { Game } from "./game.js";
+import { newGame } from "./newGame.js";
 
-const game = new Game();
-game.init();
+// Создаём игру при первом запуске
+const initialGame = new Game();
+initialGame.init();
+
+newGame(initialGame);

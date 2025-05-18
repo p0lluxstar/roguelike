@@ -1,3 +1,6 @@
+import { newGame } from "./newGame.js";
+import { Game } from "./game.js";
+
 export const gameOver = (text) => {
     const gameOver = document.querySelector(".game-over");
     const modalOverlay = document.querySelector(".modal-overlay");
@@ -19,6 +22,7 @@ export const gameOver = (text) => {
     const closeModal = () => {
         gameOver.style.display = 'none';
         modalOverlay.style.display = 'none';
+        document.removeEventListener('keydown', blockKeys, true);
     };
 
     // Открытие модалки
@@ -30,6 +34,8 @@ export const gameOver = (text) => {
 
     gameOverYesBtn.addEventListener("click", () => {
         window.location.reload();
+        // closeModal();
+        // startGame();
     });
 
     gameOverCancelBtn.addEventListener("click", closeModal);

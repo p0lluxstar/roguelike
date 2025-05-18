@@ -7,14 +7,13 @@ body, html {
 }
 
 body {
-    /* background-color: #000000; */
-    background-image: url(../images/background.jpg);
-    /* background: linear-gradient(to right, #000000, #ffffff); */
+    background-color: #000000;
     color: #ffffff;
     font-family: "Playfair Display";
-    background-position: center center;
+    /* background-image: url(../images/background.jpg); */
+    /* background-position: center center;
     background-repeat: no-repeat;
-    background-size: cover;
+    background-size: cover; */
 }
 
 button {
@@ -26,9 +25,13 @@ button:hover {
     opacity: 0.9;
 }
 
+button:focus-visible {
+    outline: none;
+}
+
 .main{
     display: flex;
-    /* justify-content: center; */
+    justify-content: space-evenly;
     align-items: center;
     height: 100%;
     width: 100%;
@@ -203,6 +206,18 @@ button:hover {
     z-index: 1000;
 }
 
+.sword {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+}
+
+.sword-img {
+    width: 100%;
+    max-height: 900px;
+}
+
 @media (max-width: 1600px) {
     .field {
         width: 1008px;
@@ -211,6 +226,10 @@ button:hover {
 
     .field .tile .health {
         height: 3px;
+    }
+
+    .sword-img {
+        max-height: 700px;
     }
 }
 
@@ -222,5 +241,9 @@ button:hover {
 
     .field .tile .health {
         height: 2px;
+    }
+
+    .sword-img {
+        max-height: 500px;
     }
 }
