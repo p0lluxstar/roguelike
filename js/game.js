@@ -1,7 +1,8 @@
-// Каждый второй удар отнимает у игрока здовроье в дипазоне 10-15, при сближении отемается 7 
-// Зелье восстанавливает здоровьe в диапозоне 20-30
+import { rulesGame } from './rulesGame.js';
+import { gameOver } from './gameOver.js';
+import { newGame } from './newGame.js';
 
-class Game {
+export class Game {
     constructor() {
         this.fieldBox = document.querySelector(".field-box");
         this.field = document.querySelector(".field");
@@ -11,7 +12,6 @@ class Game {
         this.numberStepsInfo = document.querySelector(".number-steps");
         this.numberPotionInfo = document.querySelector(".number-potion");
         this.numberAttacksInfo = document.querySelector(".number-attacks");
-        this.rulesGameBtn = document.querySelector(".rules-game-btn");
         this.width = 40;
         this.height = 24;
         this.map = [];
@@ -26,7 +26,7 @@ class Game {
         this.numberAttacks = 0;
         this.numberHit = 0;
         this.isEnemieNear = false;
-        this.playerСoordinates = {
+        this.playerCoordinates = {
             x:null,
             y:null
         }
@@ -52,10 +52,6 @@ class Game {
             this.updateTileSize();
             this.renderMap();
         });
-
-        this.rulesGameBtn.addEventListener("click", () => {
-            this.clickBtnRulesGame();
-        });
     }
 
     init() {
@@ -69,16 +65,17 @@ class Game {
         this.renderMap();
         this.setupControls();
         this.checkEnemyAttacks();
-        this.clickBtnRulesGame();
         this.levelLifeInfo.textContent = this.playerParameters.health;
         this.numberEnemiesInfo.textContent = this.numberEnemies;
         this.numberInventoryInfo.textContent = this.numberInventory;
         this.numberStepsInfo.textContent = this.numberSteps;
         this.numberPotionInfo.textContent = this.numberPotio;
         this.numberAttacksInfo.textContent = this.numberAttacks;
+        rulesGame(this);
+        newGame()
     }
 
-    creatRandomNumRange (min, max){
+    createRandomNumberInRange (min, max){
         if (min > max) throw new Error("Минимальное значение больше максимального");
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
@@ -148,10 +145,6 @@ class Game {
         }
     }
 
-    clickBtnRulesGame() {
-        console.log('click')
-    }
-
     //1. Базовый каркас карты, заполняет все ячейки tileW
     generateMap() {
         this.map = Array.from({ length: this.height }, () => Array(this.width).fill("tileW"));
@@ -159,7 +152,7 @@ class Game {
 
     //2. Генерируем где будут коридоры
     generateCorridors() { 
-        const corridorCount = this.creatRandomNumRange(3, 5)
+        const corridorCount = this.createRandomNumberInRange(3, 5)
         const axisNumbersX = this.getUniqueRandomNumbers(corridorCount, this.width - 1)
         const axisNumbersY = this.getUniqueRandomNumbers(corridorCount, this.height - 1)
 
@@ -186,14 +179,14 @@ class Game {
     
     //3. Генерируем где будут комнаты 
     generateRooms() {
-        const roomCount = this.creatRandomNumRange(5, 10)
+        const roomCount = this.createRandomNumberInRange(5, 10)
     
         for (let i = 0; i < roomCount; i++) {
             const randomIndex = Math.floor(Math.random() * this.corridors.length);
             const [firstTileY, firstTileX] = this.corridors[randomIndex].split('-').map(Number);
     
-            let roomWidth = this.creatRandomNumRange(3, 8);
-            let roomHeight = this.creatRandomNumRange(3, 8);
+            let roomWidth = this.createRandomNumberInRange(3, 8);
+            let roomHeight = this.createRandomNumberInRange(3, 8);
     
             // Проверяем, помещается ли комната в пределах карты
             if (firstTileX + roomWidth >= this.width || firstTileY + roomHeight >= this.height) continue;
@@ -249,7 +242,7 @@ class Game {
                 tile.classList.add("tile", this.map[y][x]);
 
                 // Удаление игрока с поля
-                if (x === this.playerСoordinates.x && y === this.playerСoordinates.y && this.playerParameters.health <= 0) {
+                if (x === this.playerCoordinates.x && y === this.playerCoordinates.y && this.playerParameters.health <= 0) {
                     tile.className = "tile tile-";
                 }
 
@@ -310,8 +303,8 @@ class Game {
         newX = Math.max(0, Math.min(newX, this.width - 1));
         newY = Math.max(0, Math.min(newY, this.height - 1));
 
-        this.playerСoordinates.x = newX
-        this.playerСoordinates.y = newY
+        this.playerCoordinates.x = newX
+        this.playerCoordinates.y = newY
 
         const updatePlayerPosition  = (newX, newY) => {
             this.map[this.player.y][this.player.x] = "tile-";
@@ -333,7 +326,7 @@ class Game {
         // когда берем зелье
         if(this.map[newY][newX] === "tileHP"){
             updatePlayerPosition(newX, newY)
-            this.playerParameters.health = this.playerParameters.health + this.creatRandomNumRange(this.potionPower.min, this.potionPower.max);
+            this.playerParameters.health = this.playerParameters.health + this.createRandomNumberInRange(this.potionPower.min, this.potionPower.max);
             this.numberPotio --;
             this.changedNumberPotio();
             this.changedPlayerHealth();
@@ -425,7 +418,7 @@ class Game {
             this.numberAttacks++;
 
             if (this.numberHit === 2) {
-                this.playerParameters.health -= this.creatRandomNumRange(this.enemieParametrs.attackPowerMin, this.enemieParametrs.attackPowerMax); 
+                this.playerParameters.health -= this.createRandomNumberInRange(this.enemieParametrs.attackPowerMin, this.enemieParametrs.attackPowerMax); 
                 this.numberHit = 0;
             }
 
@@ -457,13 +450,12 @@ class Game {
     checkGameOver() {
         if (this.playerParameters.health <= 0) {
             this.gameOver = true;
-            this.showDelayedConfirm('Игра окончена! Вы погибли.\n\nНачать заново?');
+            gameOver('Игра окончена! Вы погибли. Начать заново?')
+            // this.showDelayedConfirm('Игра окончена! Вы погибли.\n\nНачать заново?');
         } else if (this.numberEnemies === 0) {
             this.gameOver = true;
-            this.showDelayedConfirm('Поздравляем! Вы победили всех врагов!\n\nНачать заново?');
+            gameOver('Поздравляем! Вы победили всех врагов! Начать заново?')
+            // this.showDelayedConfirm('Поздравляем! Вы победили всех врагов!\n\nНачать заново?');
         }
     }  
 }
-
-var game = new Game();
-game.init();

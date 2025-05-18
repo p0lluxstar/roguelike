@@ -7,16 +7,36 @@ body, html {
 }
 
 body {
-    background-color: #000000;
+    /* background-color: #000000; */
+    background-image: url(../images/background.jpg);
+    /* background: linear-gradient(to right, #000000, #ffffff); */
     color: #ffffff;
     font-family: "Playfair Display";
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+button {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button:hover {
+    opacity: 0.9;
 }
 
 .main{
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
+    align-items: center;
+    height: 100%;
     width: 100%;
     margin: 0 auto;
+}
+
+.field-box {
+    margin-left: 40px;
 }
 
 .field-header {
@@ -31,9 +51,43 @@ body {
     margin: 0px;
 }
 
-.rules-game-btn {
-    height: 20px;
-    padding: 0px;
+.game-rules {
+    display: none;
+    flex-direction: column;
+    gap:20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.list-rules {
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    max-width: 600px;
+}
+
+.game-rules__close-btn {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.game-rules__close-btn:hover {
+    opacity: 0.9;
+}
+
+.modal-overlay {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000000dd;
+    z-index: 999;
 }
 
 .field {
@@ -52,31 +106,31 @@ body {
     width: 30px;
     height: 30px;
     background-size: 100%;
-    background-image: url(images/tile-.png);
+    background-image: url(../images/tile-.png);
     z-index: 5;
 }
 
 .field .tileW {
-    background-image: url(images/tile-W.png);
+    background-image: url(../images/tile-W.png);
 }
 
 .field .tileE {
-    background-image: url(images/tile-E.png);
+    background-image: url(../images/tile-E.png);
     z-index: 10;
 }
 
 .field .tileP {
-    background-image: url(images/tile-P.png);
+    background-image: url(../images/tile-P.png);
     z-index: 10;
 }
 
 .field .tileHP {
-    background-image: url(images/tile-HP.png);
+    background-image: url(../images/tile-HP.png);
     z-index: 9;
 }
 
 .field .tileSW {
-    background-image: url(images/tile-SW.png);
+    background-image: url(../images/tile-SW.png);
     z-index: 9;
 }
 
@@ -133,6 +187,20 @@ body {
 
 .low-health-text {
     color: #ff0000;
+}
+
+.game-over {
+    display: none;
+    flex-direction: column;
+    gap:20px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
 @media (max-width: 1600px) {
