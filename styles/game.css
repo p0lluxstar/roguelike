@@ -7,7 +7,8 @@ body, html {
 }
 
 body {
-    background-color: #000000;
+background: #7a2525;
+background: linear-gradient(312deg, rgba(122, 37, 37, 1) 0%, rgba(0, 0, 0, 1) 54%, rgba(0, 0, 0, 1) 100%);
     color: #ffffff;
     font-family: "Playfair Display";
     /* background-image: url(../images/background.jpg); */
@@ -73,6 +74,10 @@ button:focus-visible {
     flex-direction: column;
     gap:20px;
     max-width: 600px;
+}
+
+.list-rules img {
+    width: 20px;
 }
 
 .game-rules__close-btn {
@@ -215,6 +220,7 @@ button:focus-visible {
 
 .sword-img {
     width: 100%;
+    min-width: 300px;
     max-height: 900px;
 }
 
@@ -245,5 +251,15 @@ button:focus-visible {
 
     .sword-img {
         max-height: 500px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .field-box {
+        margin-left: 0px;
+    }
+
+    .sword {
+        display: none;
     }
 }
