@@ -26,13 +26,14 @@ export class Game {
         this.numberAttacks = 0;
         this.numberHit = 0;
         this.isEnemieNear = false;
+        this.numEnemiesNearby = 0;
         this.playerCoordinates = {
             x:null,
             y:null
         }
         this.potionPower = {
-            min: 20,
-            max: 30
+            min: 40,
+            max: 50
         }
         this.playerParameters = {
             health: 100,
@@ -45,7 +46,7 @@ export class Game {
             health: 100,
             attackPowerMin: 10,
             attackPowerMax: 15,
-            attackPowerApproach: 7,
+            attackPowerApproach: 3,
         }
 
         window.addEventListener("resize", () => {
@@ -408,29 +409,51 @@ export class Game {
     }
 
     // Проверяем, находится ли игрок рядом с врагом
-    checkEnemyAttacks() {
-        this.enemies.forEach(enemy => {
-            const dx = Math.abs(enemy.x - this.player.x);
-            const dy = Math.abs(enemy.y - this.player.y);
-            
-            if (dx <= 1 && dy <= 1) {
-                this.numberSteps > 0 && (this.playerParameters.health -= this.enemieParametrs.attackPowerApproach); 
-                this.isEnemieNear = true;
-                this.changedPlayerHealth();
-                this.renderMap();
-                this.checkGameOver();
-            }
-        });
+   checkEnemyAttacks() {
+    this.numEnemiesNearby = 0;
+    let foundEnemyNearby = false;
+
+    // Проходим по всем врагам без прерывания
+    for (let i = 0; i < this.enemies.length; i++) {
+        const enemy = this.enemies[i];
+        const dx = Math.abs(enemy.x - this.player.x);
+        const dy = Math.abs(enemy.y - this.player.y);
+        
+        if (dx <= 1 && dy <= 1) {
+            foundEnemyNearby = true;
+            this.numEnemiesNearby++; // Считаем всех врагов
+        }
     }
 
+    // Если есть хотя бы один враг рядом
+    if (foundEnemyNearby) {
+
+        // Наносим урон только если враг БЫЛ рядом и ОСТАЛСЯ рядом
+        if (this.isEnemieNear) {
+            this.numberSteps > 0 && (this.playerParameters.health -= this.enemieParametrs.attackPowerApproach);
+        }
+        
+        this.isEnemieNear = true;
+    } else {
+        // Если врагов нет рядом - сбрасываем флаг
+        this.isEnemieNear = false;
+    }
+
+    this.changedPlayerHealth();
+    this.renderMap();
+    this.checkGameOver();
+}
+
     attack() { 
-        // каждый второй удар по противнику отнимает здоровье у игрока
+        // каждый второй удар по противнику отнимает здоровье у игрока (убрал эту логику, сейчас каждый удар у героя отнимает здоровье)
         if (this.isEnemieNear){
             this.numberHit++;
             this.numberAttacks++;
 
-            if (this.numberHit === 2) {
-                this.playerParameters.health -= this.createRandomNumberInRange(this.enemieParametrs.attackPowerMin, this.enemieParametrs.attackPowerMax); 
+            if (this.numberHit > 0) {
+                let damage = this.createRandomNumberInRange(this.enemieParametrs.attackPowerMin, this.enemieParametrs.attackPowerMax); 
+                if (this.numEnemiesNearby > 1) damage += this.numEnemiesNearby * 3;
+                this.playerParameters.health -= damage;
                 this.numberHit = 0;
             }
 

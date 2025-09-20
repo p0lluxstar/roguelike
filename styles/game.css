@@ -2,13 +2,18 @@
     box-sizing: border-box;
 
 }
+
+html {
+    min-height: 840px;
+}
+
 body, html {
     height: 100%;
 }
 
 body {
-background: #7a2525;
-background: linear-gradient(312deg, rgba(122, 37, 37, 1) 0%, rgba(0, 0, 0, 1) 54%, rgba(0, 0, 0, 1) 100%);
+    background: #7a2525;
+    background: linear-gradient(312deg, rgba(122, 37, 37, 1) 0%, rgba(0, 0, 0, 1) 54%, rgba(0, 0, 0, 1) 100%);
     color: #ffffff;
     font-family: "Playfair Display";
     /* background-image: url(../images/background.jpg); */
@@ -67,6 +72,8 @@ button:focus-visible {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .list-rules {
@@ -209,6 +216,8 @@ button:focus-visible {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .sword {
@@ -224,7 +233,31 @@ button:focus-visible {
     max-height: 900px;
 }
 
+/***********animation***********/
+
+.game-rules, .game-over {
+    animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/***********media***********/
+
 @media (max-width: 1600px) {
+    html {
+        min-width: 1368;
+        min-height: 720px;
+    }
+
     .field {
         width: 1008px;
         height: 608px;
@@ -240,6 +273,11 @@ button:focus-visible {
 }
 
 @media (max-width: 1368px) {
+    html {
+        min-width: 1200px;
+        min-height: 600px;
+    }
+
     .field {
         width: 808px;
         height: 488px;
@@ -255,6 +293,11 @@ button:focus-visible {
 }
 
 @media (max-width: 1200px) {
+    html {
+        min-width: 820px;
+        min-height: 600px;
+    }
+
     .field-box {
         margin-left: 0px;
     }

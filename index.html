@@ -10,6 +10,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,400i|Tinos:400,400i&amp;subset=cyrillic" rel="stylesheet">
 		<link rel="stylesheet" href="styles/normalize.css">
 		<link rel="stylesheet" href="styles/game.css">
+		<link rel="stylesheet" href="styles/loading.css">
 	</head>
 	<body>
 		<div class="main">
@@ -37,8 +38,8 @@
 			<div class="game-rules">
 				<div class="list-rules">
 					<span><img src="images/game-info/tile-P.png" alt="tile-P"/> Управление героем:<br/>W – вверх, A – влево, S – вниз, D – вправо.</span>
-					<span>⚔️ Атака:<br/>Нажмите Пробел, чтобы атаковать всех врагов на соседних клетках (сверху, снизу, слева, справа). Каждый второй удар отнимает у игрока здоровье в диапазоне 10-15, при сближении отнимается на 7 единиц.</span>
-					<span><img src="images/game-info/tile-HP.png" alt="tile-HP"/> Зелье здоровья:<br/>Если герой наступает на зелье, он восстанавливает здоровье в диапазоне 20-30 единиц, а зелье исчезает.</span>
+					<span>⚔️ Атака:<br/>Нажмите Пробел, чтобы атаковать всех врагов на соседних клетках. Враг наносит 10-15 единиц урона за атаку. Чем больше врагов окружает героя, тем больше он получает урон. Если на соседней клетке находится враг и герой делает шаг в любую сторону, то у него также отнимается здоровье.</span>
+					<span><img src="images/game-info/tile-HP.png" alt="tile-HP"/> Зелье здоровья:<br/>Если герой наступает на зелье, он восстанавливает здоровье на 40-50 единиц, а зелье исчезает.</span>
 					<span><img src="images/game-info/tile-SW.png" alt="tile-SW"/> Усиление атаки:<br/>Если герой наступает на меч, его урон увеличивается, а меч исчезает.</span>
 				</div>
 				<button class="game-rules__close-btn">Закрыть</button>
@@ -52,6 +53,12 @@
 			</div>
 			<div class="modal-overlay"></div>
 		</div>
+		<div class="loading-container">
+        <div class="app-title">Загрузка...</div>
+        <div class="loader-container">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
 		<script type="module" src="js/index.js" defer></script>
 	</body>
 </html>
