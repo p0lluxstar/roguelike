@@ -1,6 +1,7 @@
 export const rulesGame = (game) => {
     const headerRulesBtn = document.querySelector(".header-rules-btn");
     const gameRules = document.querySelector(".game-rules");
+    const listRules = document.querySelector(".list-rules");
     const gameRulesCloseBtn = document.querySelector(".game-rules__close-btn");
     const modalOverlay = document.querySelector(".modal-overlay");
 
@@ -25,15 +26,17 @@ export const rulesGame = (game) => {
     };
 
     const openModal = () => {
-        gameRules.style.display = 'flex';
-        modalOverlay.style.display = 'block';
+        gameRules.classList.add('active');
+        listRules.classList.add('active');
+        modalOverlay.classList.add('active');
         document.addEventListener('keydown', handleEscape);
         document.addEventListener('keydown', blockKeys, true); // useCapture = true
     };
 
     const closeModal = () => {
-        gameRules.style.display = 'none';
-        modalOverlay.style.display = 'none';
+        gameRules.classList.remove('active');
+        listRules.classList.remove('active');
+        modalOverlay.classList.remove('active');
         document.removeEventListener('keydown', handleEscape);
         document.removeEventListener('keydown', blockKeys, true);
     };

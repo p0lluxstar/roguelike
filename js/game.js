@@ -1,5 +1,6 @@
 import { rulesGame } from './rulesGame.js';
 import { gameOver } from './gameOver.js';
+import saveTopResults from './saveTopResults.js';
 
 export class Game {
     constructor() {
@@ -27,6 +28,7 @@ export class Game {
         this.numberHit = 0;
         this.isEnemieNear = false;
         this.numEnemiesNearby = 0;
+        this.blockKeys = false;
         this.playerCoordinates = {
             x:null,
             y:null
@@ -275,30 +277,33 @@ export class Game {
     }
 
     handleKeyDown (e) {
-        let dx = 0, dy = 0;
 
-        switch (e.code) {
-            case 'KeyW': // Вверх
-                dy = -1
-                break;
-            case 'KeyS': // Влево
-                dy = 1;;
-                break;
-            case 'KeyA': // Вниз
-                dx = -1;
-                break;
-            case 'KeyD': // Вправо
-                dx = 1;
-                break;
-            case 'Space': // Атака
-                e.preventDefault();
-                this.isEnemieNear && this.attack();
-                return;
-            default:
-                return;
+        if (!this.blockKeys){
+            let dx = 0, dy = 0;
+
+            switch (e.code) {
+                case 'KeyW': // Вверх
+                    dy = -1
+                    break;
+                case 'KeyS': // Влево
+                    dy = 1;;
+                    break;
+                case 'KeyA': // Вниз
+                    dx = -1;
+                    break;
+                case 'KeyD': // Вправо
+                    dx = 1;
+                    break;
+                case 'Space': // Атака
+                    e.preventDefault();
+                    this.isEnemieNear && this.attack();
+                    return;
+                default:
+                    return;
+            }
+
+            if (dx || dy) this.movePlayer(dx, dy);
         }
-
-        if (dx || dy) this.movePlayer(dx, dy);
     };
 
     setupControls() {
@@ -482,13 +487,18 @@ export class Game {
         this.renderMap();
     }
 
+    saveResultsTop
+
     checkGameOver() {
         if (this.playerParameters.health <= 0) {
+            this.blockKeys = true
             this.gameOver = true;
             gameOver('Игра окончена! Вы погибли. Начать заново?')
             // this.showDelayedConfirm('Игра окончена! Вы погибли.\n\nНачать заново?');
         } else if (this.numberEnemies === 0) {
+            this.blockKeys = true
             this.gameOver = true;
+            saveTopResults(this.numberSteps, this.numberAttacks)
             gameOver('Поздравляем! Вы победили всех врагов! Начать заново?')
             // this.showDelayedConfirm('Поздравляем! Вы победили всех врагов!\n\nНачать заново?');
         }

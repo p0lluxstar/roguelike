@@ -1,4 +1,5 @@
 import { Game } from './game.js';
+import showTopResults from './showTopResults.js';
 
 let currentGame = null;
 
@@ -17,4 +18,5 @@ export const newGame = (initialGame) => {
 
     headerNewBtn.removeEventListener("click", startGame);
     headerNewBtn.addEventListener("click", startGame);
+    showTopResults();
 };

@@ -2,6 +2,7 @@ import { startGame } from "./newGame.js";
 
 export const gameOver = (text) => {
     const gameOver = document.querySelector(".game-over");
+    const gameOverInfo = document.querySelector(".game-over-info")
     const modalOverlay = document.querySelector(".modal-overlay");
     const gameOverYesBtn = document.querySelector(".game-over__yes-btn");
     const gameOverCancelBtn = document.querySelector(".game-over__cancel-btn");
@@ -19,13 +20,15 @@ export const gameOver = (text) => {
     };
 
     const closeModal = () => {
-        gameOver.style.display = 'none';
-        modalOverlay.style.display = 'none';
+        gameOver.classList.remove('active');
+        gameOverInfo.classList.remove('active');
+        modalOverlay.classList.remove('active')
         document.removeEventListener('keydown', blockKeys, true);
     };
 
-    gameOver.style.display = 'flex';
-    modalOverlay.style.display = 'block';
+    gameOver.classList.add('active');
+    gameOverInfo.classList.add('active');
+    modalOverlay.classList.add('active');
     gameOverCancelText.innerHTML = text;
 
     document.addEventListener('keydown', blockKeys, true);
