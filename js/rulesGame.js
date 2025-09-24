@@ -26,6 +26,7 @@ export const rulesGame = (game) => {
     };
 
     const openModal = () => {
+        document.body.style.overflow = 'hidden';
         gameRules.classList.add('active');
         listRules.classList.add('active');
         modalOverlay.classList.add('active');
@@ -34,6 +35,7 @@ export const rulesGame = (game) => {
     };
 
     const closeModal = () => {
+        document.body.style.overflow = 'visible';
         gameRules.classList.remove('active');
         listRules.classList.remove('active');
         modalOverlay.classList.remove('active');

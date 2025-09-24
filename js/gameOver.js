@@ -20,12 +20,14 @@ export const gameOver = (text) => {
     };
 
     const closeModal = () => {
+        document.body.style.overflow = 'visible';
         gameOver.classList.remove('active');
         gameOverInfo.classList.remove('active');
         modalOverlay.classList.remove('active')
         document.removeEventListener('keydown', blockKeys, true);
     };
 
+    document.body.style.overflow = 'hidden';
     gameOver.classList.add('active');
     gameOverInfo.classList.add('active');
     modalOverlay.classList.add('active');

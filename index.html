@@ -11,16 +11,17 @@
 		<link rel="stylesheet" href="styles/normalize.css">
 		<link rel="stylesheet" href="styles/game.css">
 		<link rel="stylesheet" href="styles/loading.css">
+		<link rel="icon" href="favicon.ico" type="image/x-icon">
 	</head>
 	<body>
 		<div class="main">
 			<div class="field-box">	
 				<div class="field-header">
 					<h1 class="header-title">Пошаговая игра «РОГАЛИК»</h1>
-					<div>
-						<button class="header-new-btn">Новая игра</button>
-						<button class="header-top-btn">Топ-10</button>
-						<button class="header-rules-btn">Правила игры</button>
+					<div class="main-panel">
+						<button class="btn btn-shine header-new-btn ">Новая игра</button>
+						<button class="btn btn-shine header-top-btn">Топ-10</button>
+						<button class="btn btn-shine header-rules-btn">Правила игры</button>
 					</div>
 				</div>
 				<div class="field"></div>
@@ -43,15 +44,15 @@
 					<span>⚔️ Атака:<br/>Нажмите Пробел, чтобы атаковать всех врагов на соседних клетках. Враг наносит 10-15 единиц урона за атаку. Чем больше врагов окружает героя, тем больше он получает урон. Если герой отступает от врага, находящегося на соседней клетке, и враг преследует его, герой получает также урон.</span>
 					<span><img src="images/game-info/tile-HP.png" alt="tile-HP"/> Зелье здоровья:<br/>Если герой наступает на зелье, он восстанавливает здоровье на 40-50 единиц, а зелье исчезает.</span>
 					<span><img src="images/game-info/tile-SW.png" alt="tile-SW"/> Усиление атаки:<br/>Если герой наступает на меч, его урон увеличивается, а меч исчезает.</span>
-					<button class="game-rules__close-btn">Закрыть</button>
+					<button class="btn btn-shine game-rules__close-btn">Закрыть</button>
 				</div>	
 			</div>
 			<div class="game-over">
 				<div class="game-over-info">
 					<span class="game-over-text">Игра окончена! Вы погибли. Начать заново?</span>
 					<div class="game-over-btns">
-						<button class="game-over__yes-btn">Да</button>
-						<button class="game-over__cancel-btn">Отмена</button>
+						<button class="btn btn-shine game-over__yes-btn">Да</button>
+						<button class="btn btn-shine game-over__cancel-btn">Отмена</button>
 					</div>
 				</div>
 			</div>
@@ -60,8 +61,8 @@
 					<h2 class="top-results-title">Топ-10 результатов</h2>
 					<div class="top-results-table">table</div>
 					<div class="top-results-btns">
-						<button class="top-results__clear-btn">Очистить</button>
-						<button class="top-results__close-btn">Закрыть</button>
+						<button class="btn btn-shine top-results__clear-btn">Очистить</button>
+						<button class="btn btn-shine top-results__close-btn">Закрыть</button>
 					</div>
 				</div>
 			</div>

@@ -9,6 +9,7 @@ export class Loading {
         this.startLoading();
         
         setTimeout(() => {
+            document.body.style.overflow = 'visible';
             this.hideLoader();
         }, 1000);
     }

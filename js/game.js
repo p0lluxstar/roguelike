@@ -48,7 +48,7 @@ export class Game {
             health: 100,
             attackPowerMin: 10,
             attackPowerMax: 15,
-            attackPowerApproach: 3,
+            attackPowerApproach: 4,
         }
 
         window.addEventListener("resize", () => {
@@ -414,7 +414,7 @@ export class Game {
     }
 
     // Проверяем, находится ли игрок рядом с врагом
-   checkEnemyAttacks() {
+    checkEnemyAttacks() {
     this.numEnemiesNearby = 0;
     let foundEnemyNearby = false;
 

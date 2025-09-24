@@ -22,7 +22,7 @@ const saveTopResults = (numberSteps, numberAttacks) => {
         }
     });
     
-    // Оставляем только 3 лучших результата
+    // Оставляем только 5 лучших результата
     topResults = topResults.slice(0, 10);
     
     // Сохраняем обновленный массив в localStorage

@@ -3,7 +3,7 @@
   --color-bg-end: #000;
   --color-accent: #e63946;
   --color-accent-light: #ff6b6b;
-  --color-text: #ffffff;
+  --color-text: #e9e9e9;
   --color-health: #ff0000;
   --color-health-player: #00ff00;
   --radius: 0.6rem;
@@ -22,6 +22,10 @@ html {
     min-height: 840px;
 }
 
+body {
+    overflow: hidden;
+}
+
 body, html {
     height: 100%;
 }
@@ -29,7 +33,7 @@ body, html {
 body {
     background: #7a2525;
     background: linear-gradient(312deg, rgba(122, 37, 37, 1) 0%, rgba(0, 0, 0, 1) 54%, rgba(0, 0, 0, 1) 100%);
-    color: #ffffff;
+    color: #e9e9e9;
     font-family: "Playfair Display";
     /* background-image: url(../images/background.jpg); */
     /* background-position: center center;
@@ -37,20 +41,21 @@ body {
     background-size: cover; */
 }
 
-button {
+/* button {
     padding: 6px 12px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
     font-weight: 600;
     transform: translateY(0px);
-    transition:  0.2s cubic-bezier(0.4, 0, 0.2, 1)
+    transition:  0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
 }
 
 button:hover {
     opacity: 0.9;
     transform: translateY(-2px);
-}
+} */
 
 button:focus-visible {
     outline: none;
@@ -63,6 +68,51 @@ button:focus-visible {
     height: 100%;
     width: 100%;
     margin: 0 auto;
+}
+
+.btn.btn-shine {
+    background: #e9e9e9;
+}
+
+.btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transform: translateY(0px);
+    transition:  0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-shine {
+    border: 1px solid;
+    overflow: hidden;
+    position: relative;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.btn-shine::after {
+    background: #707070;
+    content: "";
+    height: 155px;
+    left: -75px;
+    opacity: 0.2;
+    position: absolute;
+    top: -50px;
+    transform: rotate(35deg);
+    transition: all 600ms cubic-bezier(0.19, 1, 0.22, 1);
+    width: 50px;
+    z-index: 10;
+}
+
+.btn-shine:hover {
+    /* background: rgb(255 255 255 / 71%); */
+    transform: translateY(-2px);
+}
+
+.btn-shine:hover::after {
+    left: 120%;
 }
 
 .field-box {
@@ -96,11 +146,12 @@ button:focus-visible {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease, visibility 0.4s ease;
+    padding: 20px;
 }
 
 .game-rules.active, .game-over.active, .top-results.active {
    opacity: 1;
-    visibility: visible;
+   visibility: visible;
 }
 
 .list-rules, .game-over-info, .top-results-info {
@@ -302,7 +353,18 @@ button:focus-visible {
     flex-direction: column;
     gap: 4px;
     font-size: 18px;
-    margin: 10px 0px
+    margin: 10px 0px;
+    max-height: 220px;
+    overflow-y: auto;
+    text-align: center;
+    width: 280px;
+    scrollbar-width: thin;
+}
+
+.top-results-table {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) rgba(20, 20, 20, 0.8);
+    padding-right: 4px;
 }
 
 .top-results-table span {

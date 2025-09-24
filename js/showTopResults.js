@@ -8,9 +8,11 @@ const showTopResults = () => {
     const topResultsCloseBtn = document.querySelector(".top-results__close-btn");
     
     const openTopResults = () => {
+        document.body.style.overflow = 'hidden';
         modalOverlay.classList.add('active');
         topResults.classList.add('active');
         topResultsInfo.classList.add('active');
+        
 
         const topResultsFormLS = JSON.parse(localStorage.getItem('top-results')) || [];
     
@@ -22,8 +24,6 @@ const showTopResults = () => {
             return;
         }
 
-        console.log(topResultsFormLS)
-
         topResultsFormLS.forEach((result, index) => {
             if (result) {
                 topResultsTable.innerHTML += `<span>${index + 1}. 📅 ${result.date} 👣 ${result.numberSteps} ⚔️ ${result.numberAttacks}</span>`;
@@ -32,6 +32,7 @@ const showTopResults = () => {
     }
 
     const closeTopResults = () => {
+        document.body.style.overflow = 'visible';
         modalOverlay.classList.remove('active');
         topResults.classList.remove('active');
         topResultsInfo.classList.remove('active');
